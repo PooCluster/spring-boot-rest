@@ -1,8 +1,19 @@
 # Overview
 This is a project so I can learn how to start a Spring Boot RESTful application from scratch with a couple simple endpoints:
-- GET
-    - Hello World!
-- PUT
+- GET (read)
+    - id 0 -> Hello, World!
+    - id 1 -> Goodbye, World!
+    - returns 404 if id is non-existent
+    - returns 500 internal server error if id is null
+- PUT (create and update)
+    - (id, message)
+    - returns 500 internal server error if id is null
+- POST (create)
+    - (id, message)
+- DELETE (delete)
+    - (id)
+
+Each valid request should return 200.
 
 ## Steps
 ### Spring Boot Project Setup
@@ -34,3 +45,39 @@ This is a project so I can learn how to start a Spring Boot RESTful application 
 2. Look at springboot/src/main/java/com/poocluster/springboot/HelloWorldRepository.java for following implementation of a storage:
 - `interface`
 - `JpaRepository<Payload, Long>`
+
+### Preload JPA Database (Optional)
+1. Look at springboot/src/main/java/com/poocluster/springboot/DatabaseConfig.java for following annotations and implementations of preloading database:
+- `@Configuration`
+- `@Bean`
+
+### Implement REST functinality (controller)
+1. Look at springboot/src/main/java/com/poocluster/springboot/HelloWorldController.java for following annotations and implementations of preloading databse:
+- `@RestController`
+- `@GetMapping()`
+- `@PostMapping()`
+- `@PutMapping()`
+- `@DeleteMapping()`
+- `@RequestBody`
+- `@PathVariable`
+
+### Hit the endpoints!
+#### Via Curl
+Before invoking any curl commands, run this one (curl is used by Invoke-WebRequest, which we don't need):
+> `Remove-item alias:curl`
+
+Get All:
+> `curl -v http://localhost:8080/helloworlds`
+
+Get by ID:
+> `curl -v http://localhost:8080/helloworlds/{id}`
+
+Post (create) new HelloWorld:
+> `curl -v POST http://localhost:8080/helloworlds -H 'Content-Type:application/json' -d '{\"message\":\"Yuh\"}'`
+
+
+Put (create/update) HelloWorld:
+> `curl -v -X PUT http://localhost:8080/helloworlds/{id} -H 'Content-Type:application/json' -d '{\"message\":\"Wuh\"}'`
+
+Delete HelloWorld by id:
+> `curl -v -X DELETE http://localhost:8080/helloworlds/{id}`
